@@ -3,14 +3,20 @@ package com.cos.blog.test;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.model.RoleType;
@@ -23,6 +29,53 @@ public class DummyControllerTest {
 	
 	@Autowired //의존성 주입
 	private UserRepository userRepository;
+	
+	@DeleteMapping("/dummy/user/{id}")
+	public String delete(@PathVariable int id) {
+		
+		try {
+			userRepository.deleteById(id);
+		}catch(EmptyResultDataAccessException e ) {
+			
+			return "삭제에 실패했습니다. 해당 id는 없습니다";
+		}
+		
+		
+		return "삭제 완료";
+		
+	}
+	
+	//save함수는 id를 전달하지 않으면 insert를 해주고
+	//save함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
+	//save함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 한다.
+	// email , password , // Json 데이터로 받으려면 @RequestBody가 필요하다.
+	
+	 // 함수 종료시에 자동 commit이 된다. commit이 되는데 save 함수랑 무슨 상관?
+	// 영속성 컨텍스트로 인해서!!  update문을 수행하는 이유 영속화 된 데이터의 변경을 감지했기 때문에
+	// 이렇게 수정해주는 것이 더티체킹이다.!!  더티체킹을 이용한 update
+	@Transactional
+	@PutMapping("/dummy/user/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {
+		System.out.println("id: "+id);
+		System.out.println("password: "+requestUser.getPassword());
+		System.out.println("email :" + requestUser.getEmail());
+		
+		User user = userRepository.findById(id).orElseThrow(new Supplier<IllegalArgumentException>() {
+
+			@Override
+			public IllegalArgumentException get() {
+				// TODO Auto-generated method stub
+				return new IllegalArgumentException("해당 유저는 없습니다. id: "+id);
+			}
+		});
+		user.setPassword(requestUser.getPassword());
+		user.setEmail(requestUser.getEmail());
+		
+		//userRepository.save(user);
+		
+		// 더티 체킹
+		return user;
+	}
 	
 	@GetMapping("/dummy/user")
 	public List<User> list(){
