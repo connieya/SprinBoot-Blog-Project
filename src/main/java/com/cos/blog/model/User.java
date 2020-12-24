@@ -32,7 +32,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //프로젝트에 연결된 DB의 전략을 따라감
 	private int id; // 시퀀스, auto-increment
 	
-	@Column(nullable = false , length=30)
+	@Column(nullable = false , length=30 , unique = true)
 	private String username; //아이디
 	
 	@Column(nullable = false , length=100)  // 비밀번호 -> 해쉬값으로 할거라서 넉넉히
