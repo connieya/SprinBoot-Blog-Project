@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <%@ include file="../layout/header.jsp"%>
-<form action="/user/join" >
+<form >
 
   <div class="form-group">
     <label for="username">아이디</label>
@@ -10,13 +10,13 @@
   </div>
   
   <div class="form-group">
-    <label for="pwd">비밀번호</label>
+    <label for="password">비밀번호</label>
     <input type="password" class="form-control" placeholder="비밀번호를 입력하세요" id="password">
   </div>
   
   <div class="form-group">
     <label for="email">이메일</label>
-    <input type="email" class="form-control" placeholder="이메일을 입력하세요" id="email">
+    <input type="text" class="form-control" placeholder="이메일을 입력하세요" id="email">
   </div>
   
 </form>
