@@ -1,6 +1,9 @@
 package com.cos.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +21,10 @@ public class BoardController {
 	// 메인화면 갈때는 인증이 필요 없기 때문에 주석처리
 	//@AuthenticationPrincipal PrincipalDetail principal
 	@GetMapping({"", "/"})
-	public String index(Model model) { // 컨트롤러에서 세션을 어떻게 찾는지?
+	public String index(Model model,@PageableDefault(size=3, sort="id",direction = Sort.Direction.DESC) Pageable pageable ) { // 컨트롤러에서 세션을 어떻게 찾는지?
 		
 		//model은 jsp로 치면 request 정보라고 보면 된다.
-		model.addAttribute("boards", boardService.글목록());
+		model.addAttribute("boards", boardService.글목록(pageable));
 		//위에 url으로 Model을 통한 데이터 boards가 넘어간다.
 		//WEB-INF/views/index.jsp
 	//	System.out.println("로그인 사용자 아이디 :" +principal.getUsername());
