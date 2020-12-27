@@ -35,7 +35,8 @@ public class UserApiController {
 		
 		System.out.println("save 호출 됨");
 		//실제로 DB에 insert하고 아래에서 return이 되면 됨
-		
+		System.out.println("UserApiController - post -> service ㄱㄱ");
+		System.out.println("user값 넘겨주자 "+user);
 		 userService.회원가입(user);
 		
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);

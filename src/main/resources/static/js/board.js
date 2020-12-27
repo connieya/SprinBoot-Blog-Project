@@ -3,7 +3,9 @@ let index={
 		$("#btn-save").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
 			this.save();
 		});
-		
+		$("#btn-delete").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
+			this.deleteByid();
+		});
 	}
 	,
 	save:function(){
@@ -29,8 +31,23 @@ let index={
 			alert(JSON.stringify(error));
 			
 		});
+		},
 		
-	},
+		deleteByid:function(){	
+		var id= $("#id").text();
+		$.ajax({
+			type:"DELETE",
+			url:"/api/board/"+id,
+			dataType: "json"
+		}).done(function(resp){
+			alert("삭제가 완료되었습니다.");
+			location.href="/"
+			
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+			
+		});
+	}
 	
 
 	}

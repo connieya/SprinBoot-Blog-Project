@@ -24,7 +24,7 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
-	@Transactional
+
 	public void 회원가입(User user) {
 		
 		System.out.println("회원가입 성공?");
@@ -35,8 +35,12 @@ public class UserService {
 		user.setPassword(encPassword);
 		
 		user.setRole(RoleType.USER);
+		System.out.println("userRepository로 DB에 넣자~ 값은 :" +user);
 		userRepository.save(user);
 		System.out.println("회원가입 성공!!");
+		
+		//@Transacional 어노테이션이 있는데
+		// userRepository.save(user)를 해줘서 에러가 난것이었다.
 	}
 	
 	// Select할 때 트랜잭션 시작, 서비스 종료시에는 트랜잭션 종료(정합성 유지)

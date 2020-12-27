@@ -24,11 +24,29 @@ public class BoardService {
 		
 		board.setCount(0);
 		board.setUser(user);
+		System.out.println("bordService의 board값 : "+board);
 		boardRepository.save(board);
 		
 	}
 	
+	@Transactional
 	public Page<Board> 글목록(Pageable pageable){
 		return boardRepository.findAll(pageable);
+	}
+	
+	public Board 글상세보기(int id) {
+		
+		return boardRepository.findById(id)
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("글 상세보기 실패: 아이디를 찾을수없습니다");
+				});
+	}
+	
+	@Transactional()
+	public void 글삭제하기(int id) {
+		
+
+		 boardRepository.deleteById(id);
+			
 	}
 }
