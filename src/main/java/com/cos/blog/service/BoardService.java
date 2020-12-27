@@ -49,4 +49,24 @@ public class BoardService {
 		 boardRepository.deleteById(id);
 			
 	}
+	
+	@Transactional // 더티체킹 flush를 위해 선언해야하는 어노테이션
+	public void 글수정하기(int id, Board requestBoard) {
+		
+		//수정하려면 영속화를 먼저 시켜야한다. 영속화 ㄱㄱ
+		Board board = boardRepository.findById(id)
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("글 찾기 실패: 아이디를 찾을수없습니다");
+				});
+		// 영속성 컨텍스트에 board가  들어왔다.
+		//영속화 완료
+		
+		
+		board.setTitle(requestBoard.getTitle());
+		board.setContent(requestBoard.getContent());
+	
+		//해당 함수 종료시 =(Service가 종료 될때) 트랜잭션이 종료된다.
+		//이때 더티체킹이 일어난다. -> 자동 업데이트 flush
+	}
+	
 }

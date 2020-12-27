@@ -22,7 +22,7 @@
 </div>
  <button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
   <c:if test="${board.user.id == principal.user.id}">
-  <button id="btn-update" class="btn btn-primary">수정</button>
+  <a href="/board/${board.id}/updateform" class="btn btn-primary">수정</a>
   <button id="btn-delete" class="btn btn-danger">삭제</button>
   </c:if>
 </div>
