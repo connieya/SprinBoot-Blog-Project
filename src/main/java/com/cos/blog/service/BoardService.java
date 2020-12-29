@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
+import com.cos.blog.repository.ReplyRepository;
 
 @Service
 public class BoardService {
@@ -19,6 +21,8 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 	
+	@Autowired
+	private ReplyRepository replyRepository;
 	@Transactional
 	public void 글쓰기(Board board, User user) { //title, content
 		
@@ -36,6 +40,8 @@ public class BoardService {
 	
 	public Board 글상세보기(int id) {
 		
+		// 해당 id값을 통해 board안에 있는 데이터를 불러온다.
+		// 이때 DB에는 없지만 reply 객체 데이터는 Eager 전략으로 fetch로 불러올 수 있다.
 		return boardRepository.findById(id)
 				.orElseThrow( () -> {
 					return new IllegalArgumentException("글 상세보기 실패: 아이디를 찾을수없습니다");
@@ -67,6 +73,29 @@ public class BoardService {
 	
 		//해당 함수 종료시 =(Service가 종료 될때) 트랜잭션이 종료된다.
 		//이때 더티체킹이 일어난다. -> 자동 업데이트 flush
+	}
+	
+	@Transactional
+	public void 댓글쓰기(User user, int boardId ,Reply replyRequest ) {
+		
+	Board board = boardRepository.findById(boardId)
+			.orElseThrow( () -> {
+				return new IllegalArgumentException("게시글 찾기 실패: 글을 찾을수없습니다");
+			});
+	
+	System.out.println("서비스로 넘어옴->");
+	System.out.println("user 객체 : "+user);
+	System.out.println("replyRequest:" +replyRequest);
+	System.out.println("boardId: "+boardId);
+	System.out.println("board 객체 :" + board);
+		
+		replyRequest.setUser(user); 
+		replyRequest.setBoard(board);
+		
+		System.out.println("댓글 객체에 값 담아서 DB ㄱ: "+replyRequest);
+		
+		replyRepository.save(replyRequest);
+		
 	}
 	
 }

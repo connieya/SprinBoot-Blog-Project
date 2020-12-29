@@ -9,6 +9,9 @@ let index={
 		$("#btn-update").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
 			this.update();
 		});
+		$("#btn-reply-save").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
+			this.replySave();
+		});
 	}
 	,
 	save:function(){
@@ -69,6 +72,33 @@ let index={
 		}).done(function(resp){
 			alert("글 수정이 완료되었습니다.");
 			location.href="/"
+			
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+			
+		});
+		}
+		,
+		
+		replySave:function(){
+		
+		let data ={
+			
+			content: $("#reply-content").val(),
+			
+		};
+		let boardId =$("#boardId").val();
+		
+		$.ajax({
+			// 댓글 등록
+			type:"POST",
+			url:`/api/board/${boardId}`,
+			data: JSON.stringify(data), 
+			contentType:"application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(resp){
+			alert("댓글 작성이 완료되었습니다.");
+			location.href=`/board/${data.boardId}`;
 			
 		}).fail(function(error){
 			alert(JSON.stringify(error));

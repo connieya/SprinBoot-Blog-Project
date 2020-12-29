@@ -13,9 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,8 +50,14 @@ public class Board {
 	private User user; //DB는 오브젝트를 저장할 수없다. FK,자바는 오브젝트를 저장할 수 있다
 	
 	// mapperdBy 뒤에 board는 Reply.java에 있는 board이다.
-	@OneToMany(mappedBy = "board", fetch=FetchType.LAZY) // mappedBy 연관관계의 주인이 아니다.(난 fk가 아니에요)
+	@OneToMany(mappedBy = "board", fetch=FetchType.EAGER) // mappedBy 연관관계의 주인이 아니다.(난 fk가 아니에요)
+	@JsonIgnoreProperties({"board"})
+	@OrderBy("id desc")
 	private List<Reply> reply;
+	// DB에는 reply 칼럼이 없다.
+		// select 를 할때 DB에는 없지만 ,Eager 전략이기 때문에 fetch해서 바로 들고 올거다!! 
+	
+	
 	
 	@CreationTimestamp
 	private Timestamp createDate;

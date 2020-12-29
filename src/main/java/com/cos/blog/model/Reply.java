@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +35,7 @@ public class Reply {
 	
 	@ManyToOne
 	@JoinColumn(name="boardId")
+	@JsonIgnore
 	private Board board;
 	
 	@ManyToOne
