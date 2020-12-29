@@ -8,15 +8,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.dto.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
+import com.cos.blog.repository.UserRepository;
 
 @Service
 public class BoardService {
 
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private BoardRepository boardRepository;
@@ -76,26 +80,49 @@ public class BoardService {
 	}
 	
 	@Transactional
-	public void 댓글쓰기(User user, int boardId ,Reply replyRequest ) {
+	public void 댓글쓰기(ReplySaveRequestDto replyDto) {
 		
-	Board board = boardRepository.findById(boardId)
-			.orElseThrow( () -> {
-				return new IllegalArgumentException("게시글 찾기 실패: 글을 찾을수없습니다");
-			});
-	
-	System.out.println("서비스로 넘어옴->");
-	System.out.println("user 객체 : "+user);
-	System.out.println("replyRequest:" +replyRequest);
-	System.out.println("boardId: "+boardId);
-	System.out.println("board 객체 :" + board);
+		User user = userRepository.findById(replyDto.getUserId())
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("댓글 쓰기 실패: 유저 id를 찾을수없습니다");
+				}); // 영속화 완료
 		
-		replyRequest.setUser(user); 
-		replyRequest.setBoard(board);
+		Board board = boardRepository.findById(replyDto.getBoardId())
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("댓글 쓰기 실패: 게시글 id를 찾을수없습니다");
+				});
 		
-		System.out.println("댓글 객체에 값 담아서 DB ㄱ: "+replyRequest);
+		Reply reply = Reply.builder()
+				.user(user)
+				.board(board)
+				.content(replyDto.getContent())
+				.build();
 		
-		replyRepository.save(replyRequest);
+		replyRepository.save(reply);
 		
 	}
+	
+//	@Transactional
+//	public void 댓글쓰기(User user, int boardId ,Reply replyRequest ) {
+//		
+//	Board board = boardRepository.findById(boardId)
+//			.orElseThrow( () -> {
+//				return new IllegalArgumentException("게시글 찾기 실패: 글을 찾을수없습니다");
+//			});
+//	
+//	System.out.println("서비스로 넘어옴->");
+//	System.out.println("user 객체 : "+user);
+//	System.out.println("replyRequest:" +replyRequest);
+//	System.out.println("boardId: "+boardId);
+//	System.out.println("board 객체 :" + board);
+//		
+//		replyRequest.setUser(user); 
+//		replyRequest.setBoard(board);
+//		
+//		System.out.println("댓글 객체에 값 담아서 DB ㄱ: "+replyRequest);
+//		
+//		replyRepository.save(replyRequest);
+//		
+//	}
 	
 }

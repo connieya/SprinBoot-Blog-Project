@@ -83,16 +83,17 @@ let index={
 		replySave:function(){
 		
 		let data ={
-			
+			userId : $("#userId").val(),
 			content: $("#reply-content").val(),
+			boardId :$("#boardId").val()
 			
 		};
-		let boardId =$("#boardId").val();
+		
 		
 		$.ajax({
 			// 댓글 등록
 			type:"POST",
-			url:`/api/board/${boardId}`,
+			url:`/api/board/${data.boardId}/reply`,
 			data: JSON.stringify(data), 
 			contentType:"application/json; charset=utf-8",
 			dataType: "json"
