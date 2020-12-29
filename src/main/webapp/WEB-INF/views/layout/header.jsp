@@ -5,9 +5,7 @@
 
 <sec:authorize access="isAuthenticated()">
 	
-	<script>
-		
-	</script>
+	
 	<sec:authentication property="principal" var="principal" />
 	
 	

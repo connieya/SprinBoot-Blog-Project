@@ -10,7 +10,7 @@
   	글 번호 : <span id="id"><i>${board.id}</i></span>
   	작성자 : <span ><i>${board.user.username}</i></span>
   </div>
-  <button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
+  <a class="btn btn-secondary" href="/">돌아가기</a>
   <c:if test="${board.user.id == principal.user.id}">
   <a href="/board/${board.id}/updateform" class="btn btn-primary">수정</a>
   <button id="btn-delete" class="btn btn-danger">삭제</button>
