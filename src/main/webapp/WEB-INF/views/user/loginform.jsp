@@ -14,6 +14,8 @@
   </div>
  
   <button id="btn-login" class="btn btn-primary">로그인</button>
+  <a href="https://kauth.kakao.com/oauth/authorize?client_id=9b8be57efcd2106ec313b76604b5e674&redirect_uri=http://localhost:8000/auth/kakao/callback&response_type=code">
+  <img height="39px;" src="/image/kakao_login.png" /></a>
 </form>
 
 <!--  시큐리티로 커스터 마이징 하여 로그인을 할 것이기 때문에
