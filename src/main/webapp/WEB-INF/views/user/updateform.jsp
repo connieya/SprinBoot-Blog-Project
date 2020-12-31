@@ -22,6 +22,7 @@
   
 </form>
   <button id="btn-update" class="btn btn-primary">회원수정</button>
+  <button onclick="return confirm('정말로 탈퇴하시겠습니까?')" id="btn-delete" class="btn btn-danger">회원탈퇴</button>
 
 <script src="/js/user.js"></script>
 <%@ include file="../layout/footer.jsp" %>

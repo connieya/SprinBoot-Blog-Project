@@ -60,6 +60,14 @@ public class UserService {
 	 * }
 	 */
 	@Transactional
+	public void 회원탈퇴(int id) {
+		
+		 userRepository.deleteById(id);
+		
+		
+	}
+	
+	@Transactional
 	public void 회원수정(User user) {
 		//수정시에는 영속성 컨텍스트 User 오브젝트를 영속화시키고,
 		//영속화 된 User 오브젝트를 수정

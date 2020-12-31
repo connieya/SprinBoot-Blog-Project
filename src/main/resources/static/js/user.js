@@ -9,6 +9,9 @@ let index={
 		$("#btn-update").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
 			this.update();
 		});
+		$("#btn-delete").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
+			this.deleteUser();
+		});
 	}
 	,
 	save:function(){
@@ -99,6 +102,27 @@ let index={
 		}); //ajax 통신을 이용해서 3개의 데이터를 json으로
 		//변경하여 insert 요청!!
 	}
+	,
+	deleteUser:function(){
+		
+	
+		let id = $("#id").val();
+		
+		$.ajax({
+			type:"DELETE",
+			url:"/user/delete/"+id,
+			contentType:"application/json; charset=utf-8", //body 데이터가 어떤 타입인지(MIME)
+			dataType: "json" // 요청을 서버로해서 응답이 왔을 때 기본적으로 모든것이 문자열
+		}).done(function(resp){
+			alert("회원탈퇴 되었습니다.");
+			console.log(resp);
+			location.href="/"	
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+		}); 
+	}
+	
+	
 	}
 
 

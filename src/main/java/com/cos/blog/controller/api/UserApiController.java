@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +49,13 @@ public class UserApiController {
 		System.out.println("UserApiController - post -> service ㄱㄱ");
 		System.out.println("user값 넘겨주자 "+user);
 		 userService.회원가입(user);
+		
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+	
+	@DeleteMapping("/user/delete/{id}")
+	public ResponseDto<Integer> delete(@PathVariable int id){
+		userService.회원탈퇴(id);
 		
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
