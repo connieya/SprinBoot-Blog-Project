@@ -1,4 +1,5 @@
 # SprinBoot-Blog-Project
+<br/>
 
 
 ## 추가 라이브러리
@@ -52,3 +53,13 @@ https://kauth.kakao.com/oauth/token
 grant_type = authorization_code
 client_id = 9b8be57efcd2106ec313b76604b5e674
 redirect_uri = http://localhost:8000/auth/kakao/callback
+
+## 회원탈퇴
+
+*Cannot delete or update a parent row: a foreign key constraint fails (`blog`.`reply`, CONSTRAINT `FKqnspgy412rv4dfcmv69hsf4px` FOREIGN KEY (`userId`) REFERENCES `user` (`id`))*
+
+<br/>
+board 테이블과 user 테이블과 연관관계 (fk키)로 되어있어서 회원탈퇴에 실패하였다.
+
+
+
