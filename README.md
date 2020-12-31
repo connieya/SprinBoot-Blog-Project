@@ -106,12 +106,15 @@ reply 객체에 담아 로직을 수행하였다. <br/>
 **ReplyRepository.java**
 
 ```
-@Modifying
+	@Modifying
 	@Query(value="insert into reply(userId, boardId, content, createDate) values(?1,?2,?3, now())",nativeQuery = true)
 	void mSave(int userId, int BoardId, String content );
 
 ```
 
+네이밍 쿼리 사용시 참고사항!! <br/>
+- @Transactional -> @Modifying 를 사용해야함
+- 리턴 값은 void, int! <br/>
 user , board 의 데이터만 받으면 바로 insert 할 수 있는 네이밍 쿼리 전략 <br/>
 
 **네이밍 쿼리로 변경**
