@@ -16,17 +16,18 @@ import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
 import com.cos.blog.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private BoardRepository boardRepository;
 	
-	@Autowired
-	private ReplyRepository replyRepository;
+	private final BoardRepository boardRepository;
+	private final ReplyRepository replyRepository;
 	@Transactional
 	public void 글쓰기(Board board, User user) { //title, content
 		
@@ -130,4 +131,13 @@ public class BoardService {
 //		
 //	}
 	
+	//댓글 삭제하기
+	@Transactional
+	public void 댓글삭제하기(int id) {
+		System.out.println("boardService id 값은 댓글번호겠지? : " +id);
+		replyRepository.deleteById(id);
+		System.out.println("삭제 완료?? : " + id);
+		// 댓글을 삭제하고 새로고침을 해야함
+		
+	}
 }

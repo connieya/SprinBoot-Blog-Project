@@ -48,7 +48,18 @@
  			<div>${reply.content}</div>
  			<div class="d-flex">
  				<div class ="font-italic">작성자 : ${reply.user.username} &nbsp: </div>
- 				<button class="badge">삭제</button>
+ 				<input type="hidden" id="replyId" value="${reply.id }"/>
+ 				<c:choose>
+ 				<c:when test="${reply.user.id == principal.user.id}">
+ 				<button  id="btn-reply-delete" onclick="return confirm('정말로 삭제 하시겠습니까?')" 
+ 				class="badge">삭제</button>
+ 				</c:when>
+ 				<c:otherwise>
+ 				<button  onclick="alert('권한이 없습니다.')"  class="badge">삭제</button>
+ 				</c:otherwise>
+ 				</c:choose>
+ 				<!-- 댓글 같은 경우 로그인했을 때 회원과 작성자의 이름이 같을 때만 
+ 				삭제가 가능하다 -->
  			</div>
  		</li>
  		</c:forEach>

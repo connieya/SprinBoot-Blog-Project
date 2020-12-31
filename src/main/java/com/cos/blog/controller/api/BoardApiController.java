@@ -49,6 +49,15 @@ public class BoardApiController {
 		
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
+	
+	//댓글 삭제하기
+	@DeleteMapping("/api/reply/delete/{id}")
+	public ResponseDto<Integer> deleteReply(@PathVariable int id){
+		
+		System.out.println("댓글 삭제하기 로직 id는 댓글 번호?? : "+id);
+		boardService.댓글삭제하기(id);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
 
 	@PutMapping("api/board/{id}")
 	public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board){

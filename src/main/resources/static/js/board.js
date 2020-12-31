@@ -12,6 +12,9 @@ let index={
 		$("#btn-reply-save").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
 			this.replySave();
 		});
+		$("#btn-reply-delete").on("click",()=>{ //화살표 함수를 쓰는이유 this를 바인딩 하기 위해서
+			this.replyDelete();
+		});
 	}
 	,
 	save:function(){
@@ -100,6 +103,30 @@ let index={
 		}).done(function(resp){
 			alert("댓글 작성이 완료되었습니다.");
 			location.href=`/board/${data.boardId}`;
+			
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+			
+		});
+		},
+		replyDelete:function(){
+		
+		// 댓글 번호를 받아옴
+		let replyId = $("#replyId").val();
+		let boardId = $("#boardId").val();
+		
+		
+		$.ajax({
+			// 댓글 삭제
+			type:"DELETE",
+			url:`/api/reply/delete/${replyId}`, 
+			contentType:"application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(resp){
+			alert("댓글 삭제가 완료되었습니다.");
+			location.href=`/board/${boardId}`;
+			//해당 게시글 상세보기에 있는 댓글을 삭제하니깐
+			//상세 페이지에 있는 board번호도 가지고 가야함
 			
 		}).fail(function(error){
 			alert(JSON.stringify(error));
