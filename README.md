@@ -53,6 +53,7 @@ https://kauth.kakao.com/oauth/token
 grant_type = authorization_code
 client_id = 9b8be57efcd2106ec313b76604b5e674
 redirect_uri = http://localhost:8000/auth/kakao/callback
+----------------------------------
 
 ## 회원탈퇴
 
@@ -60,6 +61,42 @@ redirect_uri = http://localhost:8000/auth/kakao/callback
 
 <br/>
 board 테이블과 user 테이블과 연관관계 (fk키)로 되어있어서 회원탈퇴에 실패하였다.
+
+
+
+----------------------------------------
+
+## 댓글삭제
+
+댓글삭제를 수행하기 위해 댓글아이디를 파라미터로 넘겨줘야한다. <br/>
+input 태그 hidden 타입을 이용하여 댓글 아이디 값을 불러왔다.
+댓글 삭제도 권한이 있는 사용자만 수행 할 수 있게 <br/>
+JSTL <c:choose> 를 사용하였다.
+<c:when>안에 input 태그를 넣어 댓글 삭제를 성공했지만,
+혹시나 해서 <c:choose>안에 넣어 보니 에러가 발생하였다. <br/>
+
+
+```
+org.apache.jasper.JasperException: <h3>Validation error messages from TagLibraryValidator for [c] in [/WEB-INF/views/board/detail.jsp]</h3><p>149: Illegal text inside "c:choose" tag: "<input ...".</p><p>149: Illegal text inside "c:choose" tag: "${reply...".</p><p>149: Illegal text inside "c:choose" tag: ""/>...".</p>
+	at org.apache.jasper.compiler.DefaultErrorHandler.jspError(DefaultErrorHandler.java:55) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.ErrorDispatcher.dispatch(ErrorDispatcher.java:294) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.ErrorDispatcher.jspError(ErrorDispatcher.java:81) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Validator.validateXmlView(Validator.java:1915) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Validator.validateExDirectives(Validator.java:1863) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Compiler.generateJava(Compiler.java:224) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:386) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:362) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:346) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.JspCompilationContext.compile(JspCompilationContext.java:605) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:400) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:385) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:329) ~[tomcat-embed-jasper-9.0.41.jar:9.0.41]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:733) ~[tomcat-embed-core-9.0.41.jar:4.0.FR]
+```
+JSTL 오류이다.
+
+<c:choose> 안에 input 태그는 Illegal text로 인식한다.
+
 
 
 
