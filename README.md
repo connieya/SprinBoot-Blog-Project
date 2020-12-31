@@ -62,6 +62,70 @@ redirect_uri = http://localhost:8000/auth/kakao/callback
 <br/>
 board 테이블과 user 테이블과 연관관계 (fk키)로 되어있어서 회원탈퇴에 실패하였다.
 
+---------------------------------------
+<br/>
+
+## 댓글쓰기
+
+_영속화 -> 네이밍쿼리_
+
+**BoardService.java**
+
+영속화
+
+```
+@Transactional
+	public void 댓글쓰기(ReplySaveRequestDto replyDto) {
+	
+	User user = userRepository.findById(replyDto.getUserId())
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("댓글 쓰기 실패: 유저 id를 찾을수없습니다");
+				}); // 영속화 완료
+		
+	}
+	
+	Board board = boardRepository.findById(replyDto.getBoardId())
+				.orElseThrow( () -> {
+					return new IllegalArgumentException("댓글 쓰기 실패: 게시글 id를 찾을수없습니다");
+				});
+				
+	Reply reply = Reply.builder()
+	.user(user)
+	.board(board)
+	.content(replyDto.getContent())
+	.build();
+		
+	replyRepository.save(reply);
+```
+
+user , board 객체의 id값을 받아 repository에서 데이터를 불러와 <br/>
+reply 객체에 담아 로직을 수행하였다. <br/>
+
+코드가 난잡하여 네이밍 쿼리를 사용하였다. <br/>
+
+**ReplyRepository.java**
+
+```
+@Modifying
+	@Query(value="insert into reply(userId, boardId, content, createDate) values(?1,?2,?3, now())",nativeQuery = true)
+	void mSave(int userId, int BoardId, String content );
+
+```
+
+user , board 의 데이터만 받으면 바로 insert 할 수 있는 네이밍 쿼리 전략 <br/>
+
+**네이밍 쿼리로 변경**
+
+```
+@Transactional
+	public void 댓글쓰기(ReplySaveRequestDto replyDto) {
+		
+		//영속화 할 필요없이 replyRepository에서 만든 naming 쿼리 사용하면 됨
+		replyRepository.mSave(replyDto.getUserId(), replyDto.getBoardId(), replyDto.getContent());
+		
+		}
+
+```
 
 
 ----------------------------------------
@@ -71,7 +135,7 @@ board 테이블과 user 테이블과 연관관계 (fk키)로 되어있어서 회
 댓글삭제를 수행하기 위해 댓글아이디를 파라미터로 넘겨줘야한다. <br/>
 input 태그 hidden 타입을 이용하여 댓글 아이디 값을 불러왔다.
 댓글 삭제도 권한이 있는 사용자만 수행 할 수 있게 <br/>
-JSTL <c:choose> 를 사용하였다.
+JSTL <c:choose> 를 사용하였다.<br/>
 <c:when>안에 input 태그를 넣어 댓글 삭제를 성공했지만,
 혹시나 해서 <c:choose>안에 넣어 보니 에러가 발생하였다. <br/>
 
