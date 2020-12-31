@@ -131,6 +131,37 @@ board 테이블과 user 테이블과 연관관계 (fk키)로 되어있어서 회
 ---------------------------------------
 <br/>
 
+
+## 글삭제
+
+`디버깅` 시작 <br/>
+댓글이 있을 경우 글삭제 오류 -> Board 객체와 Reply 객체는 fk키 연관관계가 있기 때문이다.
+
+```
+2021-01-01 01:56:18.339  WARN 8068 --- [nio-8000-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1451, SQLState: 23000
+2021-01-01 01:56:18.339 ERROR 8068 --- [nio-8000-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : Cannot delete or update a parent row: a foreign key constraint fails (`blog`.`reply`, CONSTRAINT `FKayalcledc3l0g5lt1balg0jwf` FOREIGN KEY (`boardId`) REFERENCES `board` (`id`))
+2021-01-01 01:56:18.340  INFO 8068 --- [nio-8000-exec-2] o.h.e.j.b.internal.AbstractBatchImpl     : HHH000010: On release of batch it still contained JDBC statements
+2021-01-01 01:56:18.346  WARN 8068 --- [nio-8000-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement]
+```
+
+**board.java**
+<br/> 
+연관관계 관련 오류이기 때문에
+@ManyToOne 와 같은 연관관계 설정 어노테이션에서 따로 설정해줘야함을 느꼈고,
+<br/>
+stackoverflow 에서 검색해보니
+CascadeType.PERSIST ,CascadeType.REMOVE 이것을 입력해라고 했다.
+
+```
+@OneToMany(mappedBy = "board", fetch=FetchType.EAGER ,cascade = {CascadeType.PERSIST ,CascadeType.REMOVE})
+	@JsonIgnoreProperties({"board"})
+	@OrderBy("id desc")
+	private List<Reply> reply;
+```
+참고 : JPA cascade 옵션
+
+`디버깅 완료`
+
 ## 댓글쓰기
 
 _영속화 -> 네이밍쿼리_
