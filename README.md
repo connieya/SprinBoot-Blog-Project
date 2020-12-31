@@ -54,6 +54,72 @@ grant_type = authorization_code
 client_id = 9b8be57efcd2106ec313b76604b5e674
 redirect_uri = http://localhost:8000/auth/kakao/callback
 ----------------------------------
+## 회원가입
+
+오류 수정
+
+**User.java**
+
+```
+@Column(nullable = false , length=30 , unique = true)
+	private String username; //아이디
+```
+unique = true 속성으로 중복 값 X <br/>
+
+![image](https://user-images.githubusercontent.com/66653324/103412927-d5543d00-4bba-11eb-9c96-1978c74460cd.png)
+
+_costa라는 값이 있는 상태에서 회원가입 로직 수행_
+<br/>
+결과는??? <br/>
+![image](https://user-images.githubusercontent.com/66653324/103412944-e7ce7680-4bba-11eb-8cc1-ca9f225933bb.png)
+
+ajax 통신이 성공하여 회원가입 완료 문구가 나타났다. <br/>
+하지만  DB에는 당연히 오류가 난다.
+```
+2020-12-31 22:52:35.580  WARN 8068 --- [nio-8000-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1062, SQLState: 23000
+2020-12-31 22:52:35.580 ERROR 8068 --- [nio-8000-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : Duplicate entry 'costa' for key 'user.UK_jreodf78a7pl5qidfh43axdfb'
+2020-12-31 22:52:35.588  WARN 8068 --- [nio-8000-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint [user.UK_jreodf78a7pl5qidfh43axdfb]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute s
+```
+<br/>
+`디버깅` 시작!
+<br/>
+
+ **GlobalExceptionHandler.java**
+```
+@ControllerAdvice
+@RestController
+public class GlobalExceptionHandler {
+
+	// IllegalArgumentException에 해당하는 에러만 받는다.
+	//@ExceptionHandler(value= IllegalArgumentException.class)
+	@ExceptionHandler(value= Exception.class)
+	public ResponseDto<String> handleArgumentException(Exception e) {
+		
+		return new ResponseDto<String>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+	}
+	
+	
+}
+```
+모든 Exception을 받는다.<br/>
+그래서 회원가입에서 오류가 발생해도 여기서 받게 된다.<br/>
+ return 값의 INTERNAL_SERVER_ERROR.value() 값은 500이다. <br/>
+ 
+ 
+ 따라서 ajax 통신에서 코드를 수정하였다.
+ ```
+ 	if(resp.status == 500){
+	alert("회원가입에 실패하였습니다.");
+			
+	}else{
+	alert("회원가입이 완료되었습니다.");
+	location.href="/"
+	}
+ 
+ ```
+ 
+`디버깅 끝`
+---------------------------------------------
 
 ## 회원탈퇴
 
